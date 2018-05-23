@@ -39,6 +39,7 @@
 	},
 
 	"require-dev" : {
+		"gilad-ehven/wordpress-plugin-integrator-for-debug-tools-type-one" : "0.1.0",
 		"kint-php/kint" : "^1.0",
 		"mockery/mockery" : "~0.9",
 		"filp/whoops" : "~2.0"

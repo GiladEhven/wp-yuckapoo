@@ -33,3 +33,55 @@
 namespace WpYuckapoo;
 
 if ( ! defined( 'ABSPATH' ) ) exit( "Nothing to see here. Sorry. Try the home page." );
+
+$autoload_file = __DIR__ . '/vendor/autoload.php'; if ( file_exists( $autoload_file ) ) { require_once( $autoload_file );
+
+	// ---------- COMPOSER OK; PROCEED ----------------------------------------------------------------------------------------------------------------- //
+
+
+
+		// ------ START TEMP BLOCK ------------------------------------------------------------- //
+		$whoops_error_page = new \Whoops\Handler\PrettyPageHandler();
+		$whoops_error_page->setEditor( 'sublime' );
+
+		$whoops_app = new \Whoops\Run;
+		$whoops_app->pushHandler( $whoops_error_page );
+		$whoops_app->register();
+		// ------ END TEMP BLOCK --------------------------------------------------------------- //
+
+
+
+		add_action( 'loop_start', function() {
+			d( 'test' );
+			d($_SERVER);
+		});
+
+	//	func_num_argss();
+
+
+
+
+
+
+
+
+
+
+
+	// ---------- COMPOSER BROKEN OR MISSING; DON'T TOUCH PUBLIC SITE; WARN USER/WEBMASTER IN ADMIN ---------------------------------------------------- //
+
+} else {
+
+	add_action( 'admin_notices', function() {
+
+		$plugin_data = get_plugin_data( __FILE__ );
+		$plugin_name = $plugin_data['Name'];
+
+		?>
+		<div class="notice notice-error">
+			<p><?php _e( 'The <em>' . $plugin_name . '</em> plugin appears to be damaged or malfunctioning. Contact your webmaster for assistance immediately.', 'do-not-commit' ); ?></p>
+		</div>
+		<?php
+	} );
+
+}
