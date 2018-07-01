@@ -30,16 +30,15 @@
  *
  */
 
-namespace WpYuckapoo;
+	namespace Ehven\Gilad\WordPress\Plugins\WpYuckapoo;
 
-if ( ! defined( 'ABSPATH' ) ) exit( "Nothing to see here. Sorry. Try the home page." );
-
-$autoload_file = __DIR__ . '/vendor/autoload.php'; if ( file_exists( $autoload_file ) ) { require_once( $autoload_file );
-
-	// ---------- COMPOSER OK; PROCEED ----------------------------------------------------------------------------------------------------------------- //
+	if ( ! defined( 'ABSPATH' ) ) exit( 'Nothing to see here. Go <a href="/">home</a>.' );
 
 
 
+
+		// ------------------------------------------------------------------------------------- //
+		$autoload_file = __DIR__ . '/vendor/autoload.php'; if ( file_exists( $autoload_file ) ) { require_once( $autoload_file );
 		// ------ START TEMP BLOCK ------------------------------------------------------------- //
 		$whoops_error_page = new \Whoops\Handler\PrettyPageHandler();
 		$whoops_error_page->setEditor( 'sublime' );
@@ -48,40 +47,112 @@ $autoload_file = __DIR__ . '/vendor/autoload.php'; if ( file_exists( $autoload_f
 		$whoops_app->pushHandler( $whoops_error_page );
 		$whoops_app->register();
 		// ------ END TEMP BLOCK --------------------------------------------------------------- //
+		// ------ ALL CLASS LOGIC HERE --------------------------------------------------------- //
+		} else {
+			add_action( 'admin_notices', function() {
+				$plugin_data = get_plugin_data( __FILE__ );
+				$plugin_name = $plugin_data['Name'];
+				?>
+				<div class="notice notice-error">
+					<p><?php _e( 'The <em>' . $plugin_name . '</em> plugin appears to be damaged or malfunctioning. Contact your webmaster for assistance immediately.', 'do-not-commit' ); ?></p>
+				</div>
+				<?php
+			} );
+		}
+		// ------------------------------------------------------------------------------------- //
 
 
 
-		add_action( 'loop_start', function() {
-			d( 'test' );
-			d($_SERVER);
-		});
+    if ( ! class_exists( __NAMESPACE__ . 'Plugin_Core' ) ) {
 
-	//	func_num_argss();
+        class Plugin_Core {
 
+            private $plugin_name;
 
+            private $plugin_version;
 
+            public static $object_counter = 0;
 
+            public function __construct() {
 
+                if ( is_admin() ) {
 
+                	// Before activation, check for compatible environment before allowing activation:
 
+                	//  ~ verify_kosher_environment()
 
+                	//     - Composer (vendor + lock)
 
+                	//     - Compatible environment (PHP + WP)
 
+                	// Once active, check for continuing compatibility or deactivate plugin:
 
-	// ---------- COMPOSER BROKEN OR MISSING; DON'T TOUCH PUBLIC SITE; WARN USER/WEBMASTER IN ADMIN ---------------------------------------------------- //
+                	//  ~ Composer
 
-} else {
+                	//  ~ Compatibel environment?
 
-	add_action( 'admin_notices', function() {
+					$user_admin_php       = plugins_url( '/user/admin.php', __FILE__ );
+                    if ( file_exists( $user_admin_php ) ) require_once( $user_admin_php );
 
-		$plugin_data = get_plugin_data( __FILE__ );
-		$plugin_name = $plugin_data['Name'];
+                } else {
 
-		?>
-		<div class="notice notice-error">
-			<p><?php _e( 'The <em>' . $plugin_name . '</em> plugin appears to be damaged or malfunctioning. Contact your webmaster for assistance immediately.', 'do-not-commit' ); ?></p>
-		</div>
-		<?php
-	} );
+                    require_once( plugins_url(  ) . '/public/php/class-public-resources.php' );
 
-}
+                    $public_resources     = new Public_Resources;
+
+					$user_public_php      = plugins_url( '/user/public.php', __FILE__ );
+                    if ( file_exists( $user_public_php ) ) require_once( $user_public_php );
+
+                }
+
+                if ( is_customize_preview() ) {
+
+					$user_customizer_php  = plugins_url( '/user/customizer.php', __FILE__ );
+                    if ( file_exists( $user_customizer_php ) ) require_once( $user_customizer_php );
+
+                }
+
+                self::$object_counter++;
+
+                $this->set_plugin_name();
+                $this->set_plugin_version();
+
+            }
+
+            public function get_plugin_name() {
+                return $this->plugin_name;
+            }
+
+            public function get_plugin_version() {
+                return $this->plugin_version;
+            }
+
+            protected function set_plugin_name() {
+                $plugin_array = get_plugin_data( __FILE__, $markup = false, $translate = false );
+                $this->plugin_name = $plugin_array[ 'Name' ];
+            }
+
+            protected function set_plugin_version() {
+                $plugin_array = get_plugin_data( __FILE__, $markup = false, $translate = false );
+                $this->plugin_version = $plugin_array[ 'Version' ];
+            }
+
+            protected function verify_kosher_environment() {
+
+            	$composer_autoloader = __DIR__ . '/vendor/autoload.php';
+            	$composer_directory  = __DIR__ . '/vendor/';
+            	$composer_load_file  = __DIR__ . 'composer.json';
+            	$composer_lock_file  = __DIR__ . 'composer.lock';
+
+            	$verify_composer = 0;
+            	$verify_composer = 0;
+
+            	$kosher_issues = array();
+            	if ( ! file_exists( $composer_autoloader ) ) $kosher_issues[] = 'Composer is not installed or damaged.';
+            }
+
+        }
+
+    }
+
+    $plugin_core = new Plugin_Core();
