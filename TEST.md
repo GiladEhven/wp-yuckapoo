@@ -5,6 +5,12 @@
 TIE Base | Class | Methods | Properties
 ---------|-------|---------|-----------
 
+<style>
+	th {
+		background-color: pink;
+	}
+</style>
+
 <table>
 	<tr><th colspan="6">TIE Base                                                                                                   </th>    <th>Class</th>    <th>Methods</th>    <th>Properties</th></tr>
 	<tr><td>base/   </td><td>               </td><td>              </td><td>             </td><td>           </td><td>             </td>    <td>     </td>    <td>       </td>    <td>          </td></tr>
