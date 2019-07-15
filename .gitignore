@@ -1,2 +1,24 @@
-*.log
+# WORKSTATION
+
+*.diff
+*.err
+*.sass-cache
+*.sql
+*.sublime-project
+*.sublime-workspace
+*.syncdb
+*.vi
+*.zip
+
+.DS_Store
+
+Thumbs.db
+
+# PROJECT
+
 vendor/
+
+*.gz
+*.log
+
+sitemap.xml
